@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TagValueParser", "TagValueParser.vbproj", "{1FF8E8A1-E9FF-4C70-BF20-E14D85DDACDD}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TagValueParserTest", "..\TagValueParser.Test\TagValueParserTest.vbproj", "{405E402B-F306-4AD1-ADB5-7ED7EA1E5DF3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1FF8E8A1-E9FF-4C70-BF20-E14D85DDACDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FF8E8A1-E9FF-4C70-BF20-E14D85DDACDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FF8E8A1-E9FF-4C70-BF20-E14D85DDACDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FF8E8A1-E9FF-4C70-BF20-E14D85DDACDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{405E402B-F306-4AD1-ADB5-7ED7EA1E5DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{405E402B-F306-4AD1-ADB5-7ED7EA1E5DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{405E402B-F306-4AD1-ADB5-7ED7EA1E5DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{405E402B-F306-4AD1-ADB5-7ED7EA1E5DF3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F6436A5F-24B0-467C-8FF5-B71B6D89CD3A}
+	EndGlobalSection
+EndGlobal
