@@ -18,9 +18,9 @@ model class
         ''' <returns></returns>
         <TagValue("Name")>
         Public Property Name As String
-        <TagValue("title")>
+        <TagValue("Ttle")>
         Public Property Title As String
-        <TagValue("age")>
+        <TagValue("Age")>
         Public Property Age As Integer
     End Class
 ```
