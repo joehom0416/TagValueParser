@@ -48,6 +48,13 @@ Imports TagValueParser
     End Sub
 
     <TestMethod()>
+    Public Sub TestParseTagValueSpecificSeparator_CorrectBehavior()
+        Dim tag As String = "(Parameters=Subject,Form)"
+        Dim setting As JobTagsSettingSpecial = Parser.Parse(Of JobTagsSettingSpecial)(tag)
+        Assert.IsTrue(setting.Parameters.Split(",").Length = 2)
+    End Sub
+
+    <TestMethod()>
     Public Sub TestParseTagValueInherits_CorrectBehavior()
         Dim tag As String = "[/Parameters=Subject,Form/]
                             [/Subject=CSP Password Recovery/]  
@@ -103,6 +110,10 @@ Imports TagValueParser
                 Return Parameters.Split(",")
             End Get
         End Property
+    End Class
+    Public Class JobTagsSettingSpecial
+        <TagValue("Parameters", "(", ")")>
+        Public Property Parameters As String
     End Class
     Public Class JobTagsSettingChild
         Inherits JobTagsSetting

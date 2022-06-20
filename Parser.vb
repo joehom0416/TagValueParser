@@ -18,11 +18,7 @@ Public Class Parser
         For Each p As PropertyInfo In props
             Dim attribute As TagValueAttribute = p.GetCustomAttribute(Of TagValueAttribute)(True)
             If attribute IsNot Nothing Then
-                Dim value As String = ""
-
-                value = If(attribute.WithSlash,
-                    DecodeStr(tag, attribute.Tag, "[/", "/]", 2),
-                    DecodeStr(tag, attribute.Tag, "[", "]", 2))
+                Dim value As String = DecodeStr(tag, attribute.Tag, attribute.StartSeparator, attribute.EndSeparator, 2)
                 Try
                     accessor(result, p.Name) = Convert.ChangeType(value, p.PropertyType)
                 Catch ex As Exception

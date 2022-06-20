@@ -3,14 +3,21 @@ Public Class TagValueAttribute
     Inherits Attribute
 
     Public Property Tag As String
-    Public Property WithSlash As Boolean = True
+    Public Property StartSeparator As String = "[/" 'Left separator character
+    Public Property EndSeparator As String = "/]" 'Left separator character
     Public Sub New(tag As String)
         Me.Tag = tag
     End Sub
-
-    Public Sub New(tag As String, withSlash As Boolean)
+    ''' <summary>
+    ''' specific start and end separator
+    ''' </summary>
+    ''' <param name="tag">tag value</param>
+    ''' <param name="startSeparator">start separator</param>
+    ''' <param name="endSeparator">end separator</param>
+    Public Sub New(tag As String, startSeparator As String, endSeparator As String)
         Me.Tag = tag
-        Me.WithSlash = withSlash
+        Me.StartSeparator = startSeparator
+        Me.EndSeparator = endSeparator
     End Sub
 
 End Class
