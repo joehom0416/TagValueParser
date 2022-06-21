@@ -28,7 +28,7 @@ model class
 # Parse tag value string to object with specific start separator and end separator
 parser
 ```vb
- Dim tag As String = "(Parameters=Subject,Form)"
+ Dim tag As String = "(Parameters=Subject)"
         Dim setting As JobTagsSettingSpecial = Parser.Parse(Of JobTagsSettingSpecial)(tag)
 ```
 model class
