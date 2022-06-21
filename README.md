@@ -10,7 +10,7 @@ parser
         Dim human As Human = Parser.Parse(Of Human)(tag)
 ```
 model class
-```
+```vb
  Public Class Human
         ''' <summary>
         ''' this tag value is use to get name of user
