@@ -22,7 +22,7 @@ model class
         Public Property Title As String
         <TagValue("Age")>
         Public Property Age As Integer
-        <TagValue("Other","(",")")>
+        <TagValue("Other","[","]")>
         Public Property Age As Integer
     End Class
 ```
