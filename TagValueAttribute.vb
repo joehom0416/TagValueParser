@@ -14,10 +14,22 @@ Public Class TagValueAttribute
     ''' <param name="tag">tag value</param>
     ''' <param name="startSeparator">start separator</param>
     ''' <param name="endSeparator">end separator</param>
-    Public Sub New(tag As String, startSeparator As String, endSeparator As String)
+    Public Sub New(tag As String, format As TagFormat)
         Me.Tag = tag
-        Me.StartSeparator = startSeparator
-        Me.EndSeparator = endSeparator
+
+        Select Case format
+            Case TagFormat.Parentheses
+                StartSeparator = "("
+                EndSeparator = ")"
+            Case TagFormat.Bracket
+                StartSeparator = "["
+                EndSeparator = "]"
+        End Select
     End Sub
 
+    Public Enum TagFormat As Integer
+        BracketSlash = 1
+        Bracket = 2
+        Parentheses = 3
+    End Enum
 End Class

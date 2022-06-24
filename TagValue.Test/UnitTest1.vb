@@ -112,7 +112,7 @@ Imports TagValueParser
         End Property
     End Class
     Public Class JobTagsSettingSpecial
-        <TagValue("Parameters", "(", ")")>
+        <TagValue("Parameters", TagValueAttribute.TagFormat.Parentheses)>
         Public Property Parameters As String
     End Class
     Public Class JobTagsSettingChild
