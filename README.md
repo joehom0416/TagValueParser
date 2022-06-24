@@ -6,7 +6,7 @@ parser
 ```vb
     Dim tag As String = "[/Name=John/]
                              [/Title=Software Engineer/]
-                             [/Age=30/]"
+                             [/Age=30/] (Other=sasas)"
         Dim human As Human = Parser.Parse(Of Human)(tag)
 ```
 model class
@@ -21,6 +21,8 @@ model class
         <TagValue("Ttle")>
         Public Property Title As String
         <TagValue("Age")>
+        Public Property Age As Integer
+        <TagValue("Other","(",")")>
         Public Property Age As Integer
     End Class
 ```
