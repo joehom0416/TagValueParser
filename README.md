@@ -1,7 +1,7 @@
 # TagValueParser
 ViewPoint Tag Value parser
 
-# Parse tag value string to object, default tag format will be bracket splash ([/..../] 
+# Parse tag value string to object, default tag format will be bracket splash [/..../] 
 parser
 ```vb
     Dim tag As String = "[/Name=John/]
@@ -26,7 +26,7 @@ model class
         Public Property Age As Integer
     End Class
 ```
-# Parse tag value string to object with bracket ([...])
+# Parse tag value string to object with bracket [...]
 ```vb
 Dim tag As String = "[Parameters=Subject]"
 Dim setting As JobTagsSettingSpecial = Parser.Parse(Of JobTagsSettingSpecial)(tag)
@@ -39,7 +39,7 @@ Dim setting As JobTagsSettingSpecial = Parser.Parse(Of JobTagsSettingSpecial)(ta
     End Class
 ```
 
-# Parse tag value string to object with parentheses
+# Parse tag value string to object with parentheses (...)
 ```vb
  Dim tag As String = "(Parameters=Subject)"
         Dim setting As JobTagsSettingSpecial = Parser.Parse(Of JobTagsSettingSpecial)(tag)
