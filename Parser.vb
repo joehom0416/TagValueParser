@@ -1,6 +1,8 @@
 ﻿Imports System.Reflection
 Imports FastMember
 Imports System.Linq
+Imports System.Collections.Generic
+
 Public Class Parser
 
     ''' <summary>
@@ -19,11 +21,23 @@ Public Class Parser
             Dim attribute As TagValueAttribute = p.GetCustomAttribute(Of TagValueAttribute)(True)
             If attribute IsNot Nothing Then
                 Dim value As String = DecodeStr(tag, attribute.Tag, attribute.StartSeparator, attribute.EndSeparator, 2)
-                Try
-                    accessor(result, p.Name) = Convert.ChangeType(value, p.PropertyType)
-                Catch ex As Exception
-                    '---
-                End Try
+                If attribute.DynamicProperty Then
+                    Dim paramNameList As String() = value.Split(","c)
+                    Dim dict = New Dictionary(Of String, String)
+                    For Each paramName In paramNameList
+                        If Not dict.ContainsKey(paramName) Then
+                            dict.Add(paramName, DecodeStr(tag, paramName, attribute.StartSeparator, attribute.EndSeparator, 2))
+                        End If
+                    Next
+                    accessor(result, p.Name) = dict
+                Else
+                    Try
+                        accessor(result, p.Name) = Convert.ChangeType(value, p.PropertyType)
+                    Catch ex As Exception
+                        ' no op
+                    End Try
+                End If
+
 
             End If
         Next

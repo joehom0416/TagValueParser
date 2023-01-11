@@ -64,6 +64,21 @@ Imports TagValueParser
         Assert.IsTrue(setting.Subject = "CSP Password Recovery")
         Assert.IsTrue(setting.Form = "CSPFGO01")
     End Sub
+
+
+    <TestMethod()>
+    Public Sub TestParams()
+        Dim tag As String = "[/Parameters=Subject,Form/]
+                            [/Subject=CSP Password Recovery/]  
+                            [/Form=CSPFGO01/] "
+        Dim setting As JobTagsSettingChild2 = Parser.Parse(Of JobTagsSettingChild2)(tag)
+        Assert.IsTrue(setting.Parameters.Count = 2)
+        Assert.IsTrue(setting.Parameters("Subject") = "CSP Password Recovery")
+        Assert.IsTrue(setting.Parameters("Form") = "CSPFGO01")
+
+
+    End Sub
+
     Public Class Human
         ''' <summary>
         ''' this tag value is use to get name of user
@@ -122,5 +137,10 @@ Imports TagValueParser
 
         <TagValue("Form")>
         Public Property Form As String
+    End Class
+
+    Public Class JobTagsSettingChild2
+        <TagValue("Parameters", DynamicProperty:=True)>
+        Public Property Parameters As Dictionary(Of String, String)
     End Class
 End Class

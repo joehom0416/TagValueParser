@@ -3,11 +3,13 @@ Public Class TagValueAttribute
     Inherits Attribute
 
     Public Property Tag As String
+    Public Property DynamicProperty As Boolean = False
     Public Property StartSeparator As String = "[/" 'Left separator character
     Public Property EndSeparator As String = "/]" 'Left separator character
     Public Sub New(tag As String)
         Me.Tag = tag
     End Sub
+
     ''' <summary>
     ''' specific start and end separator
     ''' </summary>
