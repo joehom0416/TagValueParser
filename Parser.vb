@@ -2,6 +2,8 @@
 Imports FastMember
 Imports System.Linq
 Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.Dynamic
 
 Public Class Parser
 
@@ -11,7 +13,7 @@ Public Class Parser
     ''' <typeparam name="T"></typeparam>
     ''' <param name="tag"></param>
     ''' <returns></returns>
-    Public Shared Function Parse(Of T As New)(tag As String) As T
+    Public Shared Function Parse2(Of T As New)(tag As String) As T
         Dim type As Type = GetType(T)
         Dim accessor As TypeAccessor = TypeAccessor.Create(type)
         'Dim member As MemberSet = accessor.GetMembers()
@@ -20,14 +22,14 @@ Public Class Parser
         For Each p As PropertyInfo In props
             Dim attribute As TagValueAttribute = p.GetCustomAttribute(Of TagValueAttribute)(True)
             If attribute IsNot Nothing Then
-                Dim value As String = DecodeStr(tag, attribute.Tag, attribute.StartSeparator, attribute.EndSeparator, 2)
+                Dim value As String = DecodeString(tag, attribute.Tag, attribute.StartSeparator, attribute.EndSeparator)
                 If attribute.DynamicProperty Then
                     Dim paramNameList As String() = value.Split(","c)
                     Dim dict = New Dictionary(Of String, String)
                     For Each paramName In paramNameList
                         Dim formmattedParamName As String = If(String.IsNullOrEmpty(attribute.DynamicPropertyStringPattern), paramName, attribute.DynamicPropertyStringPattern.Replace("[key]", paramName))
                         If Not dict.ContainsKey(formmattedParamName) Then
-                            dict.Add(formmattedParamName, DecodeStr(tag, formmattedParamName, attribute.StartSeparator, attribute.EndSeparator, 2))
+                            dict.Add(formmattedParamName, DecodeString(tag, formmattedParamName, attribute.StartSeparator, attribute.EndSeparator))
                         End If
                     Next
                     accessor(result, p.Name) = dict
@@ -40,6 +42,41 @@ Public Class Parser
                 End If
 
 
+            End If
+        Next
+
+        Return result
+    End Function
+
+    Public Shared Function Parse(Of T As New)(tag As String) As T
+        Dim type As Type = GetType(T)
+        Dim result As T = Activator.CreateInstance(Of T)()
+        For Each p As PropertyInfo In type.GetProperties()
+            Dim attribute As TagValueAttribute = p.GetCustomAttribute(Of TagValueAttribute)(True)
+            If attribute IsNot Nothing Then
+                Dim value As String = DecodeString(tag, attribute.Tag, attribute.StartSeparator, attribute.EndSeparator)
+                If attribute.DynamicProperty Then
+                    Const placeHolder As String = "[key]"
+                    If Not String.IsNullOrEmpty(value) Then
+                        Dim paramNameList As String() = value.Split(","c)
+                        Dim dict = New Dictionary(Of String, String)
+                        For Each paramName In paramNameList
+                            Dim formmattedParamName As String = If(String.IsNullOrEmpty(attribute.DynamicPropertyStringPattern), paramName, attribute.DynamicPropertyStringPattern.Replace(placeHolder, paramName))
+                            Dim paramValue As String = DecodeString(tag, formmattedParamName, attribute.StartSeparator, attribute.EndSeparator)
+                            If Not String.IsNullOrEmpty(paramValue) Then
+                                dict.Add(formmattedParamName, paramValue)
+                            End If
+                        Next
+                        p.SetValue(result, dict)
+                    End If
+                Else
+                    Try
+                        p.SetValue(result, TypeDescriptor.GetConverter(p.PropertyType).ConvertFromString(value))
+                    Catch ex As Exception
+                        ' no op
+                    End Try
+
+                End If
             End If
         Next
 
@@ -102,6 +139,36 @@ Public Class Parser
             End If
         End If
 
+        Return result
+    End Function
+    ''' <summary>
+    ''' Returns a decoded string
+    ''' </summary>
+    ''' <param name="inputString">A string value</param>
+    ''' <param name="key">A string key value</param>
+    ''' <param name="leftSeparator">Left separator character</param>
+    ''' <param name="rightSeparator">Right separator character</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function DecodeString(inputString As String, key As String, leftSeparator As String, rightSeparator As String) As String
+        Dim keySeparator As String = "="
+        Dim strLine As String
+        inputString &= "" ' to avoid nothing error
+        Dim result As String = String.Empty
+
+        strLine = String.Format("{0}{1}{2}", leftSeparator, key.Trim, keySeparator).ToUpperInvariant()
+
+        If inputString.ToUpperInvariant().Contains(strLine) Then
+            Dim startIndex As Integer = inputString.ToUpperInvariant().IndexOf(strLine) + leftSeparator.Length
+            Dim endIndex As Integer = inputString.IndexOf(rightSeparator, startIndex)
+
+            If endIndex > 0 Then
+                strLine = inputString.Substring(startIndex, endIndex - startIndex)
+
+                Dim separatorIndex As Integer = strLine.IndexOf(keySeparator) + 1
+                If separatorIndex > 0 Then result = strLine.Substring(separatorIndex).Trim
+            End If
+        End If
         Return result
     End Function
 End Class
