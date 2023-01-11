@@ -51,3 +51,21 @@ model class
         Public Property Parameters As String
     End Class
 ```
+# Parse tag value string from dynamic proprty
+```vb
+  Dim tag As String = "[/Parameters=Subject,Form/]
+                            [/Propety.Subject.1=CSP Password Recovery/]  
+                            [/Propety.Form.1=CSPFGO01/] "
+        Dim setting As JobTagsSettingChild2 = Parser.Parse(Of JobTagsSettingChild2)(tag)
+        Assert.IsTrue(setting.Parameters.Count = 2)
+        Assert.IsTrue(setting.Parameters("Propety.Subject.1") = "CSP Password Recovery")
+        Assert.IsTrue(setting.Parameters("Propety.Form.1") = "CSPFGO01")
+```
+
+model class
+```vb
+ Public Class JobTagsSettingChild2
+        <TagValue("Parameters", DynamicProperty:=True, DynamicPropertyStringPattern:="Propety.[key].1")>
+        Public Property Parameters As Dictionary(Of String, String)
+    End Class
+```
