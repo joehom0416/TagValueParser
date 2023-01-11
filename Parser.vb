@@ -32,66 +32,61 @@ Public Class Parser
     End Function
 
     ''' <summary>
-    ''' Returns a decoded string (this function copy from
+    ''' Returns a decoded string
     ''' </summary>
-    ''' <param name="stringIn">A string value</param>
-    ''' <param name="keyIn">A string key value</param>
-    ''' <param name="leftSep">Left separator character</param>
-    ''' <param name="rightSep">Right separator character</param>
+    ''' <param name="inputString">A string value</param>
+    ''' <param name="key">A string key value</param>
+    ''' <param name="leftSeparator">Left separator character</param>
+    ''' <param name="rightSeparator">Right separator character</param>
     ''' <param name="mode">1- keyIn string that was found between separator -"="; 2- keyIn value (right of the keyIn '='); 3- keyIn value (same as 2 but don't require/check the '=';4-keyIn value; right of the keyIn|")</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function DecodeStr(ByVal stringIn As String, ByVal keyIn As String, ByVal leftSep As String, ByVal rightSep As String, ByVal mode As Short) As String
-        'Mode =
-        '1 - keyIn string that was found between separator
-        '2 - keyIn value; right of the keyIn="
-        '3 - keyIn value; same as 2 but don't require/check the =
-        '4 - keyIn value; right of the keyIn|"
-        '5 - keyIn value; right of the keyIn<>"
-        '6 - keyIn value; right of the keyIn:"
-        Dim loc As Integer
-        Dim loc1 As Integer
-        Dim lenLSep As Integer     ' length left separator
-        Dim keySeparator As String
+    Public Shared Function DecodeStr(inputString As String, key As String, leftSeparator As String, rightSeparator As String, mode As Short) As String
+        ' Mode =
+        ' 1 - key string that was found between separator
+        ' 2 - key value; right of the key="
+        ' 3 - key value; same as 2 but don't require/check the =
+        ' 4 - key value; right of the key|"
+        ' 5 - key value; right of the key<>"
+        ' 6 - key value; right of the key:"
+
+        Dim keySeparator As String = ""
         Dim strLine As String
-        stringIn &= ""  ' to avoid nothing error
+        inputString &= "" ' to avoid nothing error
+        Dim result As String = String.Empty
+        Select Case mode
+            Case 5
+                keySeparator = "<>"
+            Case 6
+                keySeparator = ":"
+            Case 4
+                keySeparator = "|"
+            Case Else
+                keySeparator = "="
+        End Select
 
-        If mode = 5 Then
-            keySeparator = "<>"
-        ElseIf mode = 6 Then
-            keySeparator = ":"
-        ElseIf mode = 4 Then
-            keySeparator = "|"
+        If leftSeparator.EndsWith(":") OrElse mode = 3 Then
+            strLine = String.Format("{0}{1}", leftSeparator, key.Trim).ToUpperInvariant()
         Else
-            keySeparator = "="
+            strLine = String.Format("{0}{1}{2}", leftSeparator, key.Trim, keySeparator).ToUpperInvariant()
         End If
 
-        If leftSep.EndsWith(":") OrElse mode = 3 Then
-            strLine = System.Convert.ToString(leftSep & keyIn.Trim).ToUpperInvariant()
-        Else
+        If inputString.ToUpperInvariant().Contains(strLine) Then
+            Dim startIndex As Integer = inputString.ToUpperInvariant().IndexOf(strLine) + leftSeparator.Length
+            Dim endIndex As Integer = inputString.IndexOf(rightSeparator, startIndex)
 
-            strLine = System.Convert.ToString(leftSep & keyIn.Trim & keySeparator).ToUpperInvariant()
-        End If
+            If endIndex > 0 Then
+                strLine = inputString.Substring(startIndex, endIndex - startIndex)
 
-        loc = (stringIn.ToUpperInvariant().IndexOf(strLine.ToUpperInvariant(), 0) + 1)
-        lenLSep = leftSep.Length
-        DecodeStr = ""
-
-        If loc > 0 Then
-            loc1 = (stringIn.IndexOf(rightSep, loc + lenLSep - 1) + 1)
-            If loc1 > 0 Then
-                strLine = stringIn.Substring(loc + lenLSep - 1, loc1 - loc - lenLSep)
                 If mode = 1 Then
-                    DecodeStr = strLine
+                    result = strLine
                 Else
-                    loc = (strLine.IndexOf(keySeparator, 0) + IIf(mode = 5, 2, 1))
-                    If loc > 0 Then DecodeStr = System.Convert.ToString(strLine.Substring(loc)).Trim
+                    Dim separatorIndex As Integer = strLine.IndexOf(keySeparator) + If(mode = 5, 2, 1)
+                    If separatorIndex > 0 Then result = strLine.Substring(separatorIndex).Trim
                 End If
             End If
         End If
-        '      Exit Function
 
-        'Err_Handler:
-        '      SetError(Err.Number, Err.Description, FunctionName, False) ' In the Same Class
+        Return result
     End Function
 End Class
