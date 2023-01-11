@@ -25,8 +25,9 @@ Public Class Parser
                     Dim paramNameList As String() = value.Split(","c)
                     Dim dict = New Dictionary(Of String, String)
                     For Each paramName In paramNameList
-                        If Not dict.ContainsKey(paramName) Then
-                            dict.Add(paramName, DecodeStr(tag, paramName, attribute.StartSeparator, attribute.EndSeparator, 2))
+                        Dim formmattedParamName As String = If(String.IsNullOrEmpty(attribute.DynamicPropertyStringPattern), paramName, attribute.DynamicPropertyStringPattern.Replace("[key]", paramName))
+                        If Not dict.ContainsKey(formmattedParamName) Then
+                            dict.Add(formmattedParamName, DecodeStr(tag, formmattedParamName, attribute.StartSeparator, attribute.EndSeparator, 2))
                         End If
                     Next
                     accessor(result, p.Name) = dict

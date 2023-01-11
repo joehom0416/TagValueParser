@@ -67,14 +67,14 @@ Imports TagValueParser
 
 
     <TestMethod()>
-    Public Sub TestParams()
+    Public Sub TestDynamicProperty()
         Dim tag As String = "[/Parameters=Subject,Form/]
-                            [/Subject=CSP Password Recovery/]  
-                            [/Form=CSPFGO01/] "
+                            [/Propety.Subject.1=CSP Password Recovery/]  
+                            [/Propety.Form.1=CSPFGO01/] "
         Dim setting As JobTagsSettingChild2 = Parser.Parse(Of JobTagsSettingChild2)(tag)
         Assert.IsTrue(setting.Parameters.Count = 2)
-        Assert.IsTrue(setting.Parameters("Subject") = "CSP Password Recovery")
-        Assert.IsTrue(setting.Parameters("Form") = "CSPFGO01")
+        Assert.IsTrue(setting.Parameters("Propety.Subject.1") = "CSP Password Recovery")
+        Assert.IsTrue(setting.Parameters("Propety.Form.1") = "CSPFGO01")
 
 
     End Sub
@@ -140,7 +140,7 @@ Imports TagValueParser
     End Class
 
     Public Class JobTagsSettingChild2
-        <TagValue("Parameters", DynamicProperty:=True)>
+        <TagValue("Parameters", DynamicProperty:=True, DynamicPropertyStringPattern:="Propety.[key].1")>
         Public Property Parameters As Dictionary(Of String, String)
     End Class
 End Class

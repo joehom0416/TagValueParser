@@ -4,6 +4,7 @@ Public Class TagValueAttribute
 
     Public Property Tag As String
     Public Property DynamicProperty As Boolean = False
+    Public Property DynamicPropertyStringPattern As String ' the parameter place holder must use [key], example parameter.[key]
     Public Property StartSeparator As String = "[/" 'Left separator character
     Public Property EndSeparator As String = "/]" 'Left separator character
     Public Sub New(tag As String)
